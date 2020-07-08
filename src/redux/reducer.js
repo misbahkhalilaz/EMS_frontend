@@ -1,13 +1,13 @@
-import { CHANGE_IS_FETCHING, SESSION_ADDED } from "./types";
+import { CHANGE_IS_FETCHING, GOT_USER } from "./actionTypes";
 
-export default function (state, action) {
-	switch (action) {
+export default function reducer(state, action) {
+	switch (action.type) {
 		case CHANGE_IS_FETCHING:
 			return Object.assign({}, state, { isFetching: true });
-		case SESSION_ADDED:
+		case GOT_USER:
 			return Object.assign({}, state, {
 				isFetching: false,
-				session: action.payload,
+				user: action.payload,
 			});
 		default:
 			return state;
