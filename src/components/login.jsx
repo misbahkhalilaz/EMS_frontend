@@ -1,13 +1,9 @@
 import { connect } from "react-redux";
 import React from "react";
-import {
-	changeIsFetching,
-	gotUser,
-	gotError,
-	setRole,
-} from "./../redux/actionCreators";
+import { changeIsFetching, gotUser, gotError } from "./../redux/actionCreators";
+
 function Login(props) {
-	const loginApi = (credentials) => {
+	const loginApi = (credentials, props) => {
 		const requestOptions = {
 			method: "GET",
 			headers: {
@@ -19,9 +15,12 @@ function Login(props) {
 		};
 		fetch("http://localhost:4000/", requestOptions)
 			.then((response) => response.text())
+			.then((res) => JSON.parse(res))
 			.then((result) => {
-				props.setRole("owner");
-				props.setCookie("session", result, { path: "/" });
+				console.log(result.user);
+				props.gotUser(result.user);
+				props.setCookie("session", result.token, { path: "/" });
+				// console.log(props.user);
 			})
 			.catch((error) => {
 				props.gotError(JSON.stringify(error));
@@ -40,27 +39,33 @@ function Login(props) {
 					loginApi(
 						document.getElementById("id").value +
 							":" +
-							document.getElementById("pass").value
+							document.getElementById("pass").value,
+						props
 					);
 				}}
 			>
 				Login
 			</button>
-			{props.isFetching ? <div>fetching</div> : <div>fetched</div>}
+			{props.isFetching ? (
+				<div>fetching</div>
+			) : (
+				<div>{props.cookies.session}</div>
+			)}
 		</>
 	);
 }
 
 const mapStateToProps = (state, ownProps) => ({
+	cookies: ownProps.cookies,
 	isFetching: state.isFetching,
 	user: state.user,
 	setCookie: ownProps.setCookie,
 	error: state.error,
+	state,
 });
 
 export default connect(mapStateToProps, {
 	changeIsFetching,
 	gotUser,
 	gotError,
-	setRole,
 })(Login);

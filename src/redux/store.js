@@ -5,11 +5,10 @@ const initState = {
 	isFetching: false,
 	error: null,
 	user: {
-		userid: "id",
-		name: "name",
-		role: "role",
+		userid: null,
+		name: null,
+		role: null,
 	},
-	role: null,
 };
 
 const store = createStore(reducer, initState);
