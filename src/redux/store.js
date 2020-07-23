@@ -1,5 +1,8 @@
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import { createLogger } from "redux-logger";
 import reducer from "./reducer";
+
+const logger = createLogger();
 
 const initState = {
 	isFetching: false,
@@ -11,6 +14,6 @@ const initState = {
 	},
 };
 
-const store = createStore(reducer, initState);
+const store = createStore(reducer, initState, applyMiddleware(logger));
 
 export default store;
