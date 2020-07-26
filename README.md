@@ -33,3 +33,16 @@ EMS frontend using React and Redux
 2- private, proj group chat.
 3- view broadcast.
 4- view salary.
+
+# features employee
+
+interactive:
+1- attendance.
+2- chat.
+3- projects/tasks.
+
+views:
+1- broadcast.
+2- events.
+3- notifications, messages badge.
+4-
