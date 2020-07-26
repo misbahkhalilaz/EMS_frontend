@@ -1,19 +1,9 @@
 import React from "react";
-import LoginForm from "../components/loginForm";
-import { useCookies } from "react-cookie";
-import { connect } from "react-redux";
-import { gotError } from "../redux/actionCreators";
-import "antd/dist/antd.css";
 
-function App(props) {
-	const [cookies, setCookie, removeCookie] = useCookies(["session"]);
+import Employee from "./employee";
 
-	return <LoginForm cookies={cookies} setCookie={setCookie} />;
+function App() {
+	return <Employee />;
 }
 
-const mapStateToProps = (state, ownProps) => ({
-	error: state.error,
-	state,
-});
-
-export default connect(mapStateToProps, { gotError })(App);
+export default App;
