@@ -5,6 +5,28 @@ import { UserOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
 
-export default function Bio(props) {
-  return <div style={{ outlineColor: "black", minHeight: "20vh" }}></div>;
+function Bio(props) {
+	return (
+		<Card>
+			<Meta
+				avatar={<Avatar size={60} icon={<UserOutlined />} />}
+				title={props.name}
+				description={props.email}
+			/>
+
+			<Divider style={{ border: "1px solid DodgerBlue" }} />
+			<Descriptions column={1} colon={false}>
+				<Descriptions.Item label="Employee Code">{props.eID}</Descriptions.Item>
+				<Descriptions.Item label="Mobile Number">
+					{props.number}
+				</Descriptions.Item>
+				<Descriptions.Item label="Designation">
+					{props.designation}
+				</Descriptions.Item>
+				<Descriptions.Item label="Department">{props.depart}</Descriptions.Item>
+			</Descriptions>
+		</Card>
+	);
 }
+
+export default Bio;
