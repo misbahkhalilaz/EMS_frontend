@@ -14,7 +14,7 @@ export default function Employee(props) {
 					style={{
 						maxHeight: "9vh",
 						minHeight: "9vh",
-						backgroundColor: "blue",
+						backgroundColor: "#f2f2f0",
 					}}
 					align="middle"
 				>

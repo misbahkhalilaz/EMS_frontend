@@ -8,7 +8,7 @@ const BroadcastPanel = (props) => {
 	return (
 		<>
 			<Scrollbars
-				style={{ width: 500, height: 300 }}
+				style={{ width: 500, height: "45vh" }}
 				className="broadcast-panel-body"
 			>
 				{props.Msgs.map((msg) => (

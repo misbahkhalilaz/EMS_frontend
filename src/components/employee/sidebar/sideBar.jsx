@@ -2,6 +2,7 @@ import React from "react";
 import Bio from "./bio-panel";
 import { Row, Typography, Badge } from "antd";
 import BroadcastPanel from "./broadcast-panel";
+import { Scrollbars } from "react-custom-scrollbars";
 
 const { Title } = Typography;
 
@@ -51,8 +52,10 @@ var msgs = [
 export default function SideBar(props) {
 	return (
 		<>
-			<Row style={{ maxHeight: "48vh" }}>
-				<Bio />
+			<Row>
+				<Scrollbars style={{ width: 500, height: "48vh" }}>
+					<Bio />
+				</Scrollbars>
 			</Row>
 
 			<Row>
@@ -66,9 +69,8 @@ export default function SideBar(props) {
 				</Title>
 				<Row
 					style={{
-						scrollBehavior: "smooth",
-						maxHeight: "46vh",
-						minHeight: "46h",
+						maxHeight: "45vh",
+						minHeight: "45vh",
 						overflowY: "auto",
 					}}
 				>

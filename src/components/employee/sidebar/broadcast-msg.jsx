@@ -9,7 +9,7 @@ function BroadcastMsg(props) {
 	var icon, showEvenDate;
 
 	if (type === "Broadcast") {
-		icon = <NotificationTwoTone style={{ marginTop: 5, fontSize: 24 }} />;
+		icon = <NotificationTwoTone style={{ marginTop: 15, fontSize: 24 }} />;
 	} else {
 		icon = <ScheduleTwoTone style={{ marginTop: 15, fontSize: 24 }} />;
 		showEvenDate = [
@@ -31,22 +31,20 @@ function BroadcastMsg(props) {
 	};
 
 	return (
-		<>
-			<Comment
-				className="hovernow"
-				actions={showEvenDate}
-				avatar={icon}
-				content={<span className="broadcast-msg">{props.msg}</span>}
-				datetime={
-					<Tooltip title="Created time">
-						<span>{moment().subtract(1, "days").fromNow()}</span>
-					</Tooltip>
-				}
-				onClick={() => {
-					Modal.info(config);
-				}}
-			/>
-		</>
+		<Comment
+			className="hovernow"
+			actions={showEvenDate}
+			avatar={icon}
+			content={<span className="broadcast-msg">{props.msg}</span>}
+			datetime={
+				<Tooltip title="Created time">
+					<span>{moment().subtract(1, "days").fromNow()}</span>
+				</Tooltip>
+			}
+			onClick={() => {
+				Modal.info(config);
+			}}
+		/>
 	);
 }
 
