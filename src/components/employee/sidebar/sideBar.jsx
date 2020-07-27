@@ -55,7 +55,7 @@ export default function SideBar(props) {
 				<Bio />
 			</Row>
 
-			<Row style={{ maxHeight: "5vh" }}>
+			<Row>
 				<Title
 					level={4}
 					strong
@@ -67,8 +67,8 @@ export default function SideBar(props) {
 				<Row
 					style={{
 						scrollBehavior: "smooth",
-						maxHeight: "47vh",
-						minHeight: "47vh",
+						maxHeight: "46vh",
+						minHeight: "46h",
 						overflowY: "auto",
 					}}
 				>
