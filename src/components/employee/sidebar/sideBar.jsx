@@ -56,11 +56,14 @@ export default function SideBar(props) {
 			</Row>
 
 			<Row style={{ maxHeight: "5vh" }}>
-				<Title level={4} strong>
+				<Title
+					level={4}
+					strong
+					style={{ paddingTop: "1vh", paddingLeft: "15px" }}
+				>
 					Broadcasts
 					<Badge className="floated" count={msgs.length} />
 				</Title>
-
 				<Row
 					style={{
 						scrollBehavior: "smooth",
