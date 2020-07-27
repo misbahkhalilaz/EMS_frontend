@@ -10,7 +10,14 @@ export default function Employee(props) {
 				<SideBar />
 			</Col>
 			<Col span={19}>
-				<Row>
+				<Row
+					style={{
+						maxHeight: "9vh",
+						minHeight: "9vh",
+						backgroundColor: "blue",
+					}}
+					align="middle"
+				>
 					<NavBar />
 				</Row>
 				<Row style={{ backgroundColor: "green" }}>

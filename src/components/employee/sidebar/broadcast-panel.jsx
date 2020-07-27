@@ -1,12 +1,16 @@
 import React from "react";
 import "./broadcast.css";
 import BroadcastMsg from "./broadcast-msg";
+import Scrollbars from "react-custom-scrollbars";
 
 const BroadcastPanel = (props) => {
 	console.log(props.Msgs.count);
 	return (
 		<>
-			<div className="broadcast-panel-body">
+			<Scrollbars
+				style={{ width: 500, height: 300 }}
+				className="broadcast-panel-body"
+			>
 				{props.Msgs.map((msg) => (
 					<BroadcastMsg
 						key={msg.eventDate}
@@ -15,7 +19,7 @@ const BroadcastPanel = (props) => {
 						eventDate={msg.eventDate}
 					/>
 				))}
-			</div>
+			</Scrollbars>
 		</>
 	);
 };

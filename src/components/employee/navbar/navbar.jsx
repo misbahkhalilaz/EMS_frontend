@@ -18,14 +18,7 @@ const menu = (
 
 export default function NavBar(props) {
 	return (
-		<div
-			style={{
-				maxHeight: "9vh",
-				minHeight: "9vh",
-				backgroundColor: "blue",
-			}}
-			align="middle"
-		>
+		<>
 			<Col offset={1} span={15}>
 				<Space align="start" size="large">
 					<Badge count={1}>
@@ -53,6 +46,6 @@ export default function NavBar(props) {
 					</Dropdown.Button>
 				</Row>
 			</Col>
-		</div>
+		</>
 	);
 }
