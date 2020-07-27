@@ -6,7 +6,7 @@ import NavBar from "../components/employee/navbar/navbar";
 export default function Employee(props) {
 	return (
 		<Row>
-			<Col span={5}>
+			<Col span={5} style={{ backgroundColor: "#f2f2f0" }}>
 				<SideBar />
 			</Col>
 			<Col span={19}>

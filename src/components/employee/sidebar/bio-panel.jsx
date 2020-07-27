@@ -7,7 +7,7 @@ const { Meta } = Card;
 
 function Bio(props) {
 	return (
-		<Card>
+		<Card style={{ backgroundColor: "#f2f2f0" }}>
 			<Meta
 				avatar={<Avatar size={60} icon={<UserOutlined />} />}
 				title={props.name}
