@@ -3,7 +3,7 @@ import React from "react";
 import Employee from "./employee";
 
 function App() {
-	return <Employee />;
+  return <Employee />;
 }
 
 export default App;
