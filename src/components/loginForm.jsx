@@ -3,6 +3,7 @@ import img from "./loginpage.png";
 import { Row, Col, Typography, Input, Button, Divider } from "antd";
 import { connect } from "react-redux";
 import { changeIsFetching, gotUser, gotError } from "../redux/actionCreators";
+import "./employee-components/main-theme.css";
 
 const { Title } = Typography;
 
