@@ -13,7 +13,7 @@ import {
 import { DownOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-import "antd/dist/antd.css";
+import "../components/admin-components/node_modules/antd/dist/antd.css";
 
 const { Title } = Typography;
 const { Search } = Input;

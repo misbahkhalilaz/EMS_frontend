@@ -10,7 +10,7 @@ import {
   Input,
   Space,
 } from "antd";
-import "antd/dist/antd.css";
+import "../components/admin-components/node_modules/antd/dist/antd.css";
 import { MinusCircleOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
