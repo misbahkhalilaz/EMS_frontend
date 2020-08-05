@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import img from "./loginpage.png";
-import { Row, Col, Typography, Input, Button, Divider } from "antd";
+import { Row, Col, Typography, Input, Button, Divider, message } from "antd";
 import { connect } from "react-redux";
 import { changeIsFetching, gotUser, gotError } from "../redux/actionCreators";
 import "./employee-components/main-theme.css";
@@ -20,13 +20,22 @@ function LoginForm(props) {
 			},
 			redirect: "follow",
 		};
+		props.changeIsFetching(true);
 		fetch("http://localhost:4000/", requestOptions)
 			.then((response) => response.text())
 			.then((res) => JSON.parse(res))
 			.then((result) => {
-				console.log(result.user);
-				props.gotUser(result.user);
-				props.setCookie("session", result.token, { path: "/" });
+				if (result.user) {
+					props.gotUser(result.user);
+					props.setCookie("session", result.token, { path: "/" });
+					props.changeIsFetching(false);
+					if (result.user.first_name)
+						message.success("Welcome " + result.user.first_name);
+					else message.success("Welcome " + result.user.userid);
+				} else {
+					props.changeIsFetching(false);
+					message.error(result);
+				}
 				// console.log(props.user);
 			})
 			.catch((error) => {
@@ -101,7 +110,6 @@ const mapStateToProps = (state, ownProps) => ({
 	user: state.user,
 	setCookie: ownProps.setCookie,
 	error: state.error,
-	state,
 });
 
 export default connect(mapStateToProps, {
