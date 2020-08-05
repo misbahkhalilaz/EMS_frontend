@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import img from "./loginpage.png";
-import { Row, Col, Typography, Input, Button, Divider, message } from "antd";
+import {
+	Row,
+	Col,
+	Typography,
+	Input,
+	Button,
+	Divider,
+	message,
+	Form,
+} from "antd";
 import { connect } from "react-redux";
 import { changeIsFetching, gotUser, gotError } from "../redux/actionCreators";
 import "./employee-components/main-theme.css";
@@ -36,7 +45,6 @@ function LoginForm(props) {
 					props.changeIsFetching(false);
 					message.error(result);
 				}
-				// console.log(props.user);
 			})
 			.catch((error) => {
 				props.gotError(JSON.stringify(error));
@@ -63,40 +71,49 @@ function LoginForm(props) {
 							textAlign: "center",
 						}}
 					>
-						<label style={{ float: "left" }}>UserID</label>
-						<Input
-							className="form-items"
-							style={{ marginBottom: 10, borderRadius: "20px" }}
-							onChange={(e) => setId(e.target.value)}
-						/>
-						<label style={{ float: "left" }}>Password</label>
-						<Input
-							type="password"
-							className="form-items"
-							style={{ marginBottom: 20, borderRadius: "20px" }}
-							onChange={(e) => setPass(e.target.value)}
-						/>
-						<Button
-							type="primary"
-							style={{ borderRadius: 10 }}
-							onClick={() => {
-								props.setCookie("role", "employee", { path: "/" });
-								loginApi(id + ":" + pass, "employee");
-							}}
-						>
-							Signin
-						</Button>
+						<Form.Item label="UserID" name="UserID">
+							<Input
+								className="form-items"
+								style={{ marginBottom: 10, borderRadius: "20px" }}
+								onChange={(e) => setId(e.target.value)}
+							/>
+						</Form.Item>
+						<Form.Item label="Password" name="Password">
+							<Input.Password
+								className="form-items"
+								style={{ marginBottom: 20, borderRadius: "20px" }}
+								onChange={(e) => setPass(e.target.value)}
+							/>
+						</Form.Item>
+						<Form.Item>
+							<Button
+								type="primary"
+								style={{ borderRadius: 10 }}
+								onClick={() => {
+									if (id.length > 0 && pass.length > 0) {
+										props.setCookie("role", "employee", { path: "/" });
+										loginApi(id + ":" + pass, "employee");
+									} else message.warning("Input credentials");
+								}}
+							>
+								SignIn
+							</Button>
+						</Form.Item>
 						<Divider>or</Divider>
-						<Button
-							type="primary"
-							style={{ borderRadius: 10 }}
-							onClick={() => {
-								props.setCookie("role", "department", { path: "/" });
-								loginApi(id + ":" + pass, "department");
-							}}
-						>
-							Admin Signin
-						</Button>
+						<Form.Item>
+							<Button
+								type="primary"
+								style={{ borderRadius: 10 }}
+								onClick={() => {
+									if (id.length > 0 && pass.length > 0) {
+										props.setCookie("role", "department", { path: "/" });
+										loginApi(id + ":" + pass, "department");
+									} else message.warning("Input credentials");
+								}}
+							>
+								Admin SignIn
+							</Button>
+						</Form.Item>
 					</div>
 				</Col>
 			</Row>
