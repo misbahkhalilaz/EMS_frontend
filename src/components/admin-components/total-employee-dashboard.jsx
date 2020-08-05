@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
 import {
 	Typography,
@@ -8,11 +8,16 @@ import {
 	Form,
 	Select,
 	Divider,
-	Option,
 	DatePicker,
+	message,
 } from "antd";
+import { useCookies } from "react-cookie";
+import { connect } from "react-redux";
+import { gotJobs } from "../../redux/actionCreators";
+import callAPI from "../callAPI";
 
 const { Title } = Typography;
+const { Option } = Select;
 
 function randomNum() {
 	return (
@@ -27,10 +32,67 @@ function randomNum() {
 	);
 }
 
-const TotalEmployee = () => {
+const TotalEmployee = (props) => {
 	const [newEmployee, setnewEmployee] = useState(false);
+	const [cookies] = useCookies("session");
 	const [empid, setEmpid] = useState(randomNum());
-	const [first_name, setFirst_name] = useState("");
+	const [first_name, setFirst_name] = useState();
+	const [last_name, setLast_name] = useState();
+	const [jobid, setJobid] = useState();
+	const [mobile, setMobile] = useState();
+	const [email, setEmail] = useState();
+	const [address, setAddress] = useState();
+	const [timestamp, setTimestamp] = useState();
+	const [password, setPassword] = useState();
+	let arr = [
+		empid,
+		first_name,
+		last_name,
+		mobile,
+		address,
+		email,
+		timestamp,
+		jobid,
+		password,
+	];
+
+	useEffect(() => {
+		callAPI(cookies.session, {
+			query: `query {
+					readJobs {
+						_id
+						title	
+						pay
+						start_time
+						exit_time
+						late_charges
+						abs_charges
+						fixed_allowances {
+							title
+							month
+							amount
+						}
+					}
+					} `,
+		}).then((res) => {
+			props.gotJobs(res.data.readJobs);
+		});
+	}, []);
+
+	let employee = {
+		_id: empid,
+		did: "admin",
+		job_id: jobid,
+		first_name: first_name,
+		last_name: last_name,
+		mobile: mobile,
+		email: email,
+		address: address,
+		joining_date: timestamp,
+		password: password,
+	};
+
+	// console.log(employee);
 
 	return (
 		<>
@@ -59,9 +121,31 @@ const TotalEmployee = () => {
 				}}
 				cancelButtonProps={{ style: { display: "none" } }}
 				onOk={() => {
-					console.log("task performed");
-					setnewEmployee(false);
-					setEmpid(randomNum());
+					if (arr.includes(undefined) || arr.includes(""))
+						message.warning("Fill all fields");
+					else {
+						callAPI(cookies.session, {
+							query: `mutation {
+							createEmployee(
+								employee: {
+								_id: "${empid}"
+								did: "admin"
+								job_id: "${jobid}"
+								first_name: "${first_name}"
+								last_name: "${last_name}"
+								mobile: "${mobile}"
+								email: "${email}"
+								address: "${address}"
+								joining_date: ${timestamp}
+								password: "${password}"
+								}
+							)
+							}`,
+						})
+							.then((res) => console.log(res))
+							.then(() => setnewEmployee(false))
+							.then(() => setEmpid(randomNum()));
+					}
 				}}
 				onCancel={() => {
 					setnewEmployee(false);
@@ -92,12 +176,22 @@ const TotalEmployee = () => {
 						/>
 					</Form.Item>
 					<Form.Item label="Joining Date" style={{ paddingBottom: 10 }}>
-						<DatePicker className="form-items" format={"DD/MM/YYYY"} />
+						<DatePicker
+							className="form-items"
+							format={"DD/MM/YYYY"}
+							onChange={(e) =>
+								setTimestamp(
+									parseInt((new Date(e.toDate()).getTime() / 1000).toFixed(0))
+								)
+							}
+						/>
 					</Form.Item>
 					<Form.Item label="Last Name">
 						<Input
+							value={last_name}
 							className="form-items"
 							onChange={(e) => {
+								setLast_name(e.target.value);
 								if (e.target.value[0])
 									setEmpid(empid[0] + e.target.value[0] + empid.slice(2, 7));
 							}}
@@ -115,8 +209,15 @@ const TotalEmployee = () => {
 							filterOption={(input, option) =>
 								option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
 							}
+							onChange={(e) => {
+								setJobid(e);
+							}}
 						>
-							{/* create iterator list of option tag here */}
+							{props.jobs.map((job) => (
+								<Option value={job._id} key={job._id}>
+									{job.title}
+								</Option>
+							))}
 						</Select>
 					</Form.Item>
 					<Form.Item
@@ -124,7 +225,11 @@ const TotalEmployee = () => {
 						label="Phone Number"
 						style={{ width: "-webkit-fill-available", paddingBottom: 10 }}
 					>
-						<Input className="form-items" />
+						<Input
+							className="form-items"
+							value={mobile}
+							onChange={(e) => setMobile(e.target.value)}
+						/>
 					</Form.Item>
 					<Form.Item
 						wrapperCol={{ offset: 2, span: 16 }}
@@ -135,14 +240,22 @@ const TotalEmployee = () => {
 							paddingLeft: 20,
 						}}
 					>
-						<Input className="form-items" />
+						<Input
+							className="form-items"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
 					</Form.Item>
 					<Form.Item
 						wrapperCol={{ offset: 2, span: 16 }}
 						label="Address"
 						style={{ width: "-webkit-fill-available", paddingBottom: 10 }}
 					>
-						<Input className="form-items" />
+						<Input
+							className="form-items"
+							value={address}
+							onChange={(e) => setAddress(e.target.value)}
+						/>
 					</Form.Item>
 					<Divider dashed />
 					<Form.Item
@@ -158,7 +271,11 @@ const TotalEmployee = () => {
 						label="Password"
 						style={{ width: "-webkit-fill-available", paddingLeft: 5 }}
 					>
-						<Input.Password className="form-items" />
+						<Input.Password
+							className="form-items"
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+						/>
 					</Form.Item>
 				</Form>
 			</Modal>
@@ -166,4 +283,8 @@ const TotalEmployee = () => {
 	);
 };
 
-export default TotalEmployee;
+const mapStateToProps = (state, ownProps) => ({
+	jobs: state.jobs,
+});
+
+export default connect(mapStateToProps, { gotJobs })(TotalEmployee);

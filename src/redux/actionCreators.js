@@ -1,4 +1,9 @@
-import { GOT_USER, CHANGE_IS_FETCHING, GOT_ERROR } from "./actionTypes";
+import {
+	GOT_USER,
+	CHANGE_IS_FETCHING,
+	GOT_ERROR,
+	GOT_JOBS,
+} from "./actionTypes";
 
 export const changeIsFetching = () => ({
 	type: CHANGE_IS_FETCHING,
@@ -12,4 +17,9 @@ export const gotUser = (user) => ({
 export const gotError = (err) => ({
 	type: GOT_ERROR,
 	payload: err,
+});
+
+export const gotJobs = (jobs) => ({
+	type: GOT_JOBS,
+	payload: jobs,
 });

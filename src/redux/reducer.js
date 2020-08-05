@@ -1,4 +1,9 @@
-import { CHANGE_IS_FETCHING, GOT_USER, GOT_ERROR } from "./actionTypes";
+import {
+	CHANGE_IS_FETCHING,
+	GOT_USER,
+	GOT_ERROR,
+	GOT_JOBS,
+} from "./actionTypes";
 
 export default function reducer(state, action) {
 	switch (action.type) {
@@ -15,6 +20,9 @@ export default function reducer(state, action) {
 				error: null,
 				user: action.payload,
 			});
+		case GOT_JOBS:
+			return Object.assign({}, state, { jobs: action.payload });
+
 		default:
 			return state;
 	}
