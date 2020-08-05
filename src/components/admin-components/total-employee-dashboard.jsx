@@ -30,6 +30,7 @@ function randomNum() {
 const TotalEmployee = () => {
 	const [newEmployee, setnewEmployee] = useState(false);
 	const [empid, setEmpid] = useState(randomNum());
+	const [first_name, setFirst_name] = useState("");
 
 	return (
 		<>
@@ -82,7 +83,9 @@ const TotalEmployee = () => {
 					<Form.Item label="First Name">
 						<Input
 							className="form-items"
+							value={first_name}
 							onChange={(e) => {
+								setFirst_name(e.target.value);
 								if (e.target.value[0])
 									setEmpid(e.target.value[0] + empid.slice(1, 7));
 							}}
@@ -155,7 +158,7 @@ const TotalEmployee = () => {
 						label="Password"
 						style={{ width: "-webkit-fill-available", paddingLeft: 5 }}
 					>
-						<Input className="form-items" />
+						<Input.Password className="form-items" />
 					</Form.Item>
 				</Form>
 			</Modal>
