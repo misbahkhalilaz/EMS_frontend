@@ -142,7 +142,7 @@ const TotalEmployee = (props) => {
 							)
 							}`,
 						})
-							.then((res) => console.log(res))
+							.then((res) => console.log(res.data.createEmployee))
 							.then(() => setnewEmployee(false))
 							.then(() => setEmpid(randomNum()));
 					}
