@@ -5,15 +5,16 @@ import reducer from "./reducer";
 const logger = createLogger();
 
 const initState = {
-  isFetching: false,
-  error: null,
-  user: {
-    userid: null,
-    name: null,
-    role: null,
-  },
-  jobs: [],
-  employees: [],
+	isFetching: false,
+	error: null,
+	user: {
+		userid: null,
+		name: null,
+		role: null,
+	},
+	jobs: [],
+	employees: [],
+	projects: [],
 };
 
 const store = createStore(reducer, initState, applyMiddleware(logger));

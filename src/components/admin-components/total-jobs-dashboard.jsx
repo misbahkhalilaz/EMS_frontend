@@ -1,14 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "antd/dist/antd.css";
-import { Typography, Button, Input, Modal, Form, Space } from "antd";
+import { Typography, Button, Input, Modal, Form, message } from "antd";
 import { connect } from "react-redux";
-
-import { MinusCircleOutlined } from "@ant-design/icons";
+import { gotJobs } from "../../redux/actionCreators";
+import callAPI from "../callAPI";
+import { useCookies } from "react-cookie";
 
 const { Title } = Typography;
 
+function randomNum() {
+	return (
+		Math.floor(Math.random() * 10).toString() +
+		Math.floor(Math.random() * 10).toString() +
+		Math.floor(Math.random() * 10).toString() +
+		Math.floor(Math.random() * 10).toString() +
+		Math.floor(Math.random() * 10).toString() +
+		Math.floor(Math.random() * 10).toString() +
+		Math.floor(Math.random() * 10).toString() +
+		Math.floor(Math.random() * 10).toString()
+	);
+}
+
 const TotalJobs = (props) => {
+	const [cookies] = useCookies("session");
 	const [newJob, setnewJob] = useState(false);
+	const [jobid, setJobid] = useState(randomNum());
+	const [title, setTitle] = useState();
+	const [pay, setPay] = useState();
+	const [start_time, setStart_time] = useState();
+	const [exit_time, setExit_time] = useState();
+	const [late_charges, setLate_charges] = useState();
+	const [abs_charges, setAbs_charges] = useState();
+	const arr = [
+		jobid,
+		title,
+		pay,
+		start_time,
+		exit_time,
+		late_charges,
+		abs_charges,
+	];
+	const getJobs = () => {
+		callAPI(cookies.session, {
+			query: `query {
+					readJobs {
+						_id
+						title	
+						pay
+						start_time
+						exit_time
+						late_charges
+						abs_charges
+					}
+					} `,
+		}).then((res) => {
+			props.gotJobs(res.data.readJobs);
+		});
+	};
+
+	useEffect(() => getJobs(), []);
 
 	return (
 		<>
@@ -35,8 +85,41 @@ const TotalJobs = (props) => {
 					style: { backgroundColor: "#1890ff", borderRadius: 20 },
 				}}
 				cancelButtonProps={{ style: { display: "none" } }}
-				onOk={addNewJob}
-				onCancel={() => setnewJob(false)}
+				onOk={() => {
+					if (arr.includes("") || arr.includes(undefined))
+						message.warning("Fill all fields");
+					else {
+						callAPI(cookies.session, {
+							query: `mutation {
+							createJob(
+								job: {
+									_id: "${jobid}"
+									title: "${title}"
+									pay: ${pay}
+									start_time: "${start_time}"
+									exit_time: "${exit_time}"
+									late_charges: ${late_charges}
+									abs_charges: ${abs_charges}
+								}
+							)
+							}`,
+						})
+							.then((res) => res.data.createJob)
+							.then((res) => {
+								if (res === 1) {
+									message.success("Created Job with ID: " + jobid);
+									getJobs();
+									setnewJob(false);
+									setJobid(randomNum());
+								} else message.error("error occured");
+							})
+							.catch((err) => message.error(err));
+					}
+				}}
+				onCancel={() => {
+					setnewJob(false);
+					setJobid(randomNum());
+				}}
 			>
 				<Form
 					wrapperCol={{ offset: 6, span: 12 }}
@@ -47,30 +130,59 @@ const TotalJobs = (props) => {
 				>
 					<Form.Item label="ID" style={{ width: "-webkit-fill-available" }}>
 						<Title level={4} className="form-items">
-							UX0001
+							{jobid}
 						</Title>
 					</Form.Item>
 					<Form.Item label="Title">
-						<Input className="form-items" />
+						<Input
+							value={title}
+							className="form-items"
+							onChange={(e) => {
+								setTitle(e.target.value);
+								if (e.target.value[0] && e.target.value[1] && e.target.value[2])
+									setJobid(
+										e.target.value[0] +
+											e.target.value[1] +
+											e.target.value[2] +
+											jobid.slice(3, 8)
+									);
+							}}
+						/>
 					</Form.Item>
 					<Form.Item label="Start Time" style={{ paddingBottom: 10 }}>
-						<Input className="form-items" />
+						<Input
+							className="form-items"
+							value={start_time}
+							onChange={(e) => setStart_time(e.target.value)}
+						/>
 					</Form.Item>
 					<Form.Item label="Pay" style={{ paddingLeft: 5 }}>
-						<Input className="form-items" />
+						<Input
+							className="form-items"
+							value={pay}
+							onChange={(e) => setPay(e.target.value)}
+						/>
 					</Form.Item>
 					<Form.Item
 						label="End Time"
 						style={{ paddingBottom: 10, paddingLeft: 5 }}
 					>
-						<Input className="form-items" />
+						<Input
+							className="form-items"
+							value={exit_time}
+							onChange={(e) => setExit_time(e.target.value)}
+						/>
 					</Form.Item>
 					<Form.Item
 						wrapperCol={{ offset: 1, span: 16 }}
 						label="Late Charges"
 						style={{ width: "-webkit-fill-available", paddingBottom: 10 }}
 					>
-						<Input className="form-items" />
+						<Input
+							className="form-items"
+							value={late_charges}
+							onChange={(e) => setLate_charges(e.target.value)}
+						/>
 					</Form.Item>
 					<Form.Item
 						wrapperCol={{ span: 16 }}
@@ -81,101 +193,12 @@ const TotalJobs = (props) => {
 							paddingLeft: 10,
 						}}
 					>
-						<Input className="form-items" />
+						<Input
+							className="form-items"
+							value={abs_charges}
+							onChange={(e) => setAbs_charges(e.target.value)}
+						/>
 					</Form.Item>
-					<Form.Item
-						wrapperCol={{ offset: 0, span: 16 }}
-						label="Early Exit Charges"
-						style={{ width: "-webkit-fill-available", paddingBottom: 10 }}
-					>
-						<Input className="form-items" />
-					</Form.Item>
-					<Title level={4} className="form-items" style={{ color: "#878787" }}>
-						Fixed Allowances
-					</Title>
-					<Form.List name="users">
-						{(fields, { add, remove }) => {
-							return (
-								<div>
-									{fields.map((field) => (
-										<Space
-											key={field.key}
-											style={{ display: "flex", marginBottom: 8 }}
-											align="start"
-										>
-											<Form.Item
-												label="Title"
-												{...field}
-												name={[field.name, "title"]}
-												fieldKey={[field.fieldKey, "title"]}
-												rules={[
-													{
-														required: true,
-														message: "Missing allowance title",
-													},
-												]}
-											>
-												<Input className="form-items" />
-											</Form.Item>
-											<Form.Item
-												label="Month"
-												{...field}
-												name={[field.name, "month"]}
-												fieldKey={[field.fieldKey, "month"]}
-												rules={[
-													{
-														required: true,
-														message: "Missing allowance month",
-													},
-												]}
-											>
-												<Input className="form-items" />
-											</Form.Item>
-											<Form.Item
-												label="Amount"
-												{...field}
-												name={[field.name, "amount"]}
-												fieldKey={[field.fieldKey, "amount"]}
-												rules={[
-													{
-														required: true,
-														message: "Missing allowance amount",
-													},
-												]}
-											>
-												<Input className="form-items" />
-											</Form.Item>
-											<MinusCircleOutlined
-												style={{
-													fontSize: 18,
-													color: "#ff0000",
-													paddingTop: 5,
-												}}
-												onClick={() => {
-													remove(field.name);
-												}}
-											/>
-										</Space>
-									))}
-									<Button
-										shape="round"
-										style={{
-											backgroundColor: "#00ff00",
-											borderRadius: 20,
-											position: "absolute",
-											bottom: 10,
-											left: 10,
-										}}
-										onClick={() => {
-											add();
-										}}
-									>
-										Add Allowance
-									</Button>
-								</div>
-							);
-						}}
-					</Form.List>
 				</Form>
 			</Modal>
 		</>
@@ -184,6 +207,6 @@ const TotalJobs = (props) => {
 
 const mapStateToProps = (state, ownProps) => ({ jobsCount: state.jobs.length });
 
-export default connect(mapStateToProps)(TotalJobs);
+export default connect(mapStateToProps, { gotJobs })(TotalJobs);
 
 function addNewJob() {}
