@@ -71,7 +71,7 @@ const ProjectPosted = (props) => {
 			.then((res) => props.gotProjects(res));
 	};
 
-	const createProject = () => {
+	const createProject = () =>
 		callAPI(cookies.session, {
 			query: `mutation {
                 createProject(
@@ -87,8 +87,7 @@ const ProjectPosted = (props) => {
                       }
                 )
               }`,
-		}).then((res) => console.log(res));
-	};
+		}).then((res) => res.data.createProject);
 
 	useEffect(() => {
 		fetchProjects();
@@ -129,10 +128,16 @@ const ProjectPosted = (props) => {
 					if (arr.includes("") || arr.includes(undefined))
 						message.warning("Fill all fields");
 					else {
-						createProject();
-						fetchProjects();
-						setnewProject(false);
-						setProjid(randomNum());
+						createProject()
+							.then((res) => {
+								if (res === 1) {
+									message.success("Project Created with ID: " + projid);
+									fetchProjects();
+									setnewProject(false);
+									setProjid(randomNum());
+								} else message.error("error occured");
+							})
+							.catch((err) => message.error(err));
 					}
 				}}
 				onCancel={() => {
