@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Row,
 	Col,
@@ -7,135 +7,95 @@ import {
 	Table,
 	Input,
 	Menu,
-	Dropdown,
+	Select,
 	Space,
 } from "antd";
+import { connect } from "react-redux";
+import { gotCurrentSalaries } from "../redux/actionCreators";
+import { useCookies } from "react-cookie";
+import callAPI from "../components/callAPI";
 import { DownOutlined } from "@ant-design/icons";
 import moment from "moment";
 
 const { Title } = Typography;
 const { Search } = Input;
+const { Option } = Select;
 
 const columns = [
 	{
 		title: "Empoyee ID",
-		dataIndex: "ID",
+		dataIndex: "employee_id",
 	},
-	{
-		title: "Name",
-		dataIndex: "Name",
-	},
+
 	{
 		title: "Basic Salary",
-		dataIndex: "BasicSalary",
+		dataIndex: "pay",
 	},
 	{
-		title: "Late Penalty",
-		dataIndex: "Late",
-	},
-	{
-		title: "Early Exit Penalty",
-		dataIndex: "EarlyExit",
-	},
-	{
-		title: "Absent Penalty",
-		dataIndex: "Absent",
-	},
-	{
-		title: "Bonus",
-		dataIndex: "Bonus",
+		title: "Penalty",
+		dataIndex: "penalty",
 	},
 	{
 		title: "Total",
-		dataIndex: "Total",
+		dataIndex: "total_salary",
 	},
 ];
 
-const data = [
-	{
-		ID: "BK0012",
-		Name: "Namaloom",
-		BasicSalary: "50000",
-		Late: "1000",
-		EarlyExit: "1000",
-		Absent: "1000",
-		Bonus: "10000",
-		Total: "570000",
-	},
-	{
-		ID: "BK0012",
-		Name: "Namaloom",
-		BasicSalary: "50000",
-		Late: "1000",
-		EarlyExit: "1000",
-		Absent: "1000",
-		Bonus: "10000",
-		Total: "570000",
-	},
-	{
-		ID: "BK0012",
-		Name: "Namaloom",
-		BasicSalary: "50000",
-		Late: "1000",
-		EarlyExit: "1000",
-		Absent: "1000",
-		Bonus: "10000",
-		Total: "570000",
-	},
-];
+const AdminSalary = (props) => {
+	const [cookies] = useCookies("session");
+	const [data, setData] = useState(props.salaries);
 
-const AdminSalary = () => {
-	const now = new Date().getUTCFullYear();
-	const years = Array(now - (now - 20))
-		.fill("")
-		.map((idx) => now - idx);
-	const months = moment.months();
-	const currentMonth = moment(new Date()).month();
-
-	const yearMenu = (
-		<Menu>
-			{years.map((year) => (
-				<Menu.Item key={year}>{year}</Menu.Item>
-			))}
-		</Menu>
-	);
-
-	const monthMenu = (
-		<Menu>
-			{months.map((month) => (
-				<Menu.Item key={month}>{month}</Menu.Item>
-			))}
-		</Menu>
-	);
+	useEffect(() => {
+		callAPI(cookies.session, {
+			query: `query{
+  readCurrentSalaries{
+    employee_id
+    timestamp
+    pay
+    penalty
+    total_salary
+  }
+}`,
+		})
+			.then((res) => props.gotCurrentSalaries(res.data.readCurrentSalaries))
+			.then(() => setData(props.salaries));
+	}, []);
 
 	return (
 		<Row style={{ padding: "30px 20px" }}>
 			<Col span={24} className="col-display">
 				<Title style={{ float: "left", color: "#878787" }} level={3}>
-					Jobs List
+					Current Month Salaries
 				</Title>
 				<div style={{ float: "right", display: "inline-block" }}>
 					<Space>
-						<Button type="primary" shape="round" className="form-items">
-							Refresh List
-						</Button>
-						<Dropdown overlay={monthMenu} trigger={["click"]}>
-							<a className="dropdown-archon">
-								{months[currentMonth]}
-								<DownOutlined className="dropdown-icon" />
-							</a>
-						</Dropdown>
-						<Dropdown overlay={yearMenu} trigger={["click"]}>
-							<a className="dropdown-archon">
-								{years[0]} <DownOutlined className="dropdown-icon" />
-							</a>
-						</Dropdown>
-						<Search
-							placeholder="Search Employee"
-							onSearch={(value) => console.log(value)}
-							style={{ width: 200, float: "right" }}
+						<Select
 							className="form-items"
-						/>
+							showSearch
+							style={{ width: 140 }}
+							optionFilterProp="children"
+							onChange={(e) => {
+								if (e === "clear") setData(props.salaries);
+								else
+									setData(
+										props.salaries.filter((data) => data.employee_id === e)
+									);
+							}}
+							filterOption={(input, option) =>
+								option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+							}
+						>
+							{[
+								<Option key="clear" value="clear">
+									{" "}
+								</Option>,
+								...props.employee.map((data) => (
+									<Option key={data._id} value={data._id}>
+										{data._id + " " + data.first_name}
+									</Option>
+								)),
+							]}
+						</Select>
 					</Space>
 				</div>
 				<br />
@@ -151,4 +111,9 @@ const AdminSalary = () => {
 	);
 };
 
-export default AdminSalary;
+const mapStateToProps = (state, ownProps) => ({
+	salaries: state.currentSalary,
+	employee: state.employees,
+});
+
+export default connect(mapStateToProps, { gotCurrentSalaries })(AdminSalary);

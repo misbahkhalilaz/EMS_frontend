@@ -7,6 +7,7 @@ import {
 	GOT_PROJECTS,
 	GOT_DAILY_ATD,
 	GOT_MONTHLY_ATD,
+	GOT_CURRENT_SALARIES,
 } from "./actionTypes";
 
 export const changeIsFetching = () => ({
@@ -46,4 +47,9 @@ export const gotDailyAtd = (atd) => ({
 export const gotMonthlyAtd = (atd) => ({
 	type: GOT_MONTHLY_ATD,
 	payload: atd,
+});
+
+export const gotCurrentSalaries = (salaries) => ({
+	type: GOT_CURRENT_SALARIES,
+	payload: salaries,
 });

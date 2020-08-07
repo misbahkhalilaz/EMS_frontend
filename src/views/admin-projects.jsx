@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Row,
 	Col,
@@ -11,151 +11,88 @@ import {
 	Table,
 } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import { connect } from "react-redux";
 
 import moment from "moment";
 
 const { Title } = Typography;
 
-const AdminProject = () => {
+const AdminProject = (props) => {
+	const [projects, setProjects] = useState();
+	const [radio, setRadio] = useState("all");
+
+	let data = props.projects.map((proj) =>
+		Object.assign({}, proj, {
+			total_members: proj.other_members.length,
+			status:
+				proj.completed === true
+					? "Completed"
+					: parseInt((new Date(Date.now()).getTime() / 1000).toFixed(0)) <
+					  proj.deadline
+					? "Active"
+					: "delayed",
+			posted_date1: new Date(proj.posted_date * 1000).toLocaleDateString(
+				"en-US"
+			),
+			deadline1: new Date(proj.deadline * 1000).toLocaleDateString("en-US"),
+		})
+	);
+
+	data = data.map((proj) =>
+		Object.assign({}, proj, {
+			progress:
+				proj.status === "Completed"
+					? "100%"
+					: proj.tasks.length > 0
+					? (proj.tasks.filter((task) => task.completed === true).length /
+							proj.tasks.length) *
+							100 +
+					  "%"
+					: "0%",
+		})
+	);
+
+	useEffect(() => {
+		setProjects(data);
+	}, []);
 	const columns = [
 		{
 			title: "Title",
-			dataIndex: "Title",
+			dataIndex: "title",
+			key: "_id",
 		},
 		{
 			title: "Date Created",
-			dataIndex: "DateCreated",
+			dataIndex: "posted_date1",
+			key: "_id",
 		},
 		{
 			title: "Deadline",
-			dataIndex: "Deadline",
+			dataIndex: "deadline1",
+			key: "_id",
 		},
 		{
 			title: "Leading Member",
-			dataIndex: "LeadingMember",
+			dataIndex: "leading_member",
+			key: "_id",
 		},
 		{
 			title: "Total Members",
-			dataIndex: "TotalMember",
+			dataIndex: "total_members",
+			key: "_id",
 		},
 
 		{
 			title: "Status",
-			dataIndex: "Status",
+			dataIndex: "status",
+			key: "_id",
 		},
 		{
 			title: "Progress",
-			dataIndex: "Progress",
-		},
-
-		{
-			title: "View/Edit",
-			dataIndex: "ViewEdit",
-			render: () => (
-				<Button type="primary" shape="round">
-					View/Edit
-				</Button>
-			),
+			dataIndex: "progress",
+			key: "_id",
 		},
 	];
-
-	const data = [
-		{
-			Title: "ABC",
-			DateCreated: "24/01/1020",
-			Deadline: "24/01/1021",
-			LeadingMember: "Mee",
-			TotalMember: "10",
-			Status: "Active",
-			Progress: "80%",
-		},
-		{
-			Title: "ABC",
-			DateCreated: "24/01/1020",
-			Deadline: "24/01/1021",
-			LeadingMember: "Mee",
-			TotalMember: "10",
-			Status: "Active",
-			Progress: "80%",
-		},
-		{
-			Title: "ABC",
-			DateCreated: "24/01/1020",
-			Deadline: "24/01/1021",
-			LeadingMember: "Mee",
-			TotalMember: "10",
-			Status: "Active",
-			Progress: "80%",
-		},
-		{
-			Title: "ABC",
-			DateCreated: "24/01/1020",
-			Deadline: "24/01/1021",
-			LeadingMember: "Mee",
-			TotalMember: "10",
-			Status: "Active",
-			Progress: "80%",
-		},
-		{
-			Title: "ABC",
-			DateCreated: "24/01/1020",
-			Deadline: "24/01/1021",
-			LeadingMember: "Mee",
-			TotalMember: "10",
-			Status: "Active",
-			Progress: "80%",
-		},
-		{
-			Title: "ABC",
-			DateCreated: "24/01/1020",
-			Deadline: "24/01/1021",
-			LeadingMember: "Mee",
-			TotalMember: "10",
-			Status: "Active",
-			Progress: "80%",
-		},
-		{
-			Title: "ABC",
-			DateCreated: "24/01/1020",
-			Deadline: "24/01/1021",
-			LeadingMember: "Mee",
-			TotalMember: "10",
-			Status: "Active",
-			Progress: "80%",
-		},
-		{
-			Title: "ABC",
-			DateCreated: "24/01/1020",
-			Deadline: "24/01/1021",
-			LeadingMember: "Mee",
-			TotalMember: "10",
-			Status: "Active",
-			Progress: "80%",
-		},
-	];
-
-	const now = new Date().getUTCFullYear();
-	const years = Array(now - (now - 20))
-		.fill("")
-		.map((idx) => now - idx);
-	const months = moment.months();
-	const currentMonth = moment(new Date()).month();
-
-	const yearMenu = (
-		<Menu>
-			{years.map((year) => (
-				<Menu.Item key={year}>{year}</Menu.Item>
-			))}
-		</Menu>
-	);
-
-	const monthMenu = (
-		<Menu>
-			{months.map((month) => (
-				<Menu.Item key={month}>{month}</Menu.Item>
-			))}
-		</Menu>
-	);
 
 	return (
 		<Row style={{ padding: "30px 20px" }}>
@@ -164,30 +101,48 @@ const AdminProject = () => {
 					<Title style={{ float: "left", color: "#878787" }} level={3}>
 						Project List
 					</Title>
-					<Radio.Group value={1} style={{ paddingTop: 5 }}>
-						<Radio value={1}>Active</Radio>
-						<Radio value={2}>Completed</Radio>
-						<Radio value={3}>Delayed</Radio>
-						<Radio value={4}>All Projects</Radio>
+					<Radio.Group value={radio} style={{ paddingTop: 5 }}>
+						<Radio
+							value={"Active"}
+							onClick={() => {
+								setProjects(data.filter((proj) => proj.status === "Active"));
+								setRadio("Active");
+							}}
+						>
+							Active
+						</Radio>
+						<Radio
+							value={"Completed"}
+							onClick={() => {
+								setProjects(data.filter((proj) => proj.status === "Completed"));
+								setRadio("Completed");
+							}}
+						>
+							Completed
+						</Radio>
+						<Radio
+							value={"delayed"}
+							onClick={() => {
+								setProjects(data.filter((proj) => proj.status === "delayed"));
+								setRadio("delayed");
+							}}
+						>
+							Delayed
+						</Radio>
+						<Radio
+							value={"all"}
+							onClick={() => {
+								setProjects(data);
+								setRadio("all");
+							}}
+						>
+							All Projects
+						</Radio>
 					</Radio.Group>
-					<div style={{ float: "right", display: "inline-block" }}>
-						<Space>
-							<Dropdown overlay={monthMenu} trigger={["click"]}>
-								<a className="dropdown-archon">
-									{months[currentMonth]}
-									<DownOutlined className="dropdown-icon" />
-								</a>
-							</Dropdown>
-							<Dropdown overlay={yearMenu} trigger={["click"]}>
-								<a className="dropdown-archon">
-									{years[0]} <DownOutlined className="dropdown-icon" />
-								</a>
-							</Dropdown>
-						</Space>
-					</div>
+
 					<Table
 						columns={columns}
-						dataSource={data}
+						dataSource={projects}
 						size="middle"
 						pagination={false}
 						scroll={{ y: 380 }}
@@ -207,7 +162,7 @@ const AdminProject = () => {
 						Total Active
 					</Title>
 					<Title style={{ display: "inline-block", margin: 0 }} level={2}>
-						300
+						{data.filter((proj) => proj.status === "Active").length}
 					</Title>
 				</Col>
 				<Col offset={2} span={7}>
@@ -215,7 +170,7 @@ const AdminProject = () => {
 						Total Completed
 					</Title>
 					<Title style={{ display: "inline-block", margin: 0 }} level={2}>
-						200
+						{data.filter((proj) => proj.status === "Completed").length}
 					</Title>
 				</Col>
 				<Col offset={2} span={6}>
@@ -223,7 +178,7 @@ const AdminProject = () => {
 						Total Delayed
 					</Title>
 					<Title style={{ display: "inline-block", margin: 0 }} level={2}>
-						073
+						{data.filter((proj) => proj.status === "delayed").length}
 					</Title>
 				</Col>
 			</Row>
@@ -231,4 +186,6 @@ const AdminProject = () => {
 	);
 };
 
-export default AdminProject;
+const mapStateToProps = (state, ownProps) => ({ projects: state.projects });
+
+export default connect(mapStateToProps)(AdminProject);

@@ -7,6 +7,7 @@ import {
 	GOT_PROJECTS,
 	GOT_DAILY_ATD,
 	GOT_MONTHLY_ATD,
+	GOT_CURRENT_SALARIES,
 } from "./actionTypes";
 
 export default function reducer(state, action) {
@@ -38,6 +39,9 @@ export default function reducer(state, action) {
 
 		case GOT_MONTHLY_ATD:
 			return Object.assign({}, state, { monthlyAtd: action.payload });
+
+		case GOT_CURRENT_SALARIES:
+			return Object.assign({}, state, { currentSalary: action.payload });
 
 		default:
 			return state;

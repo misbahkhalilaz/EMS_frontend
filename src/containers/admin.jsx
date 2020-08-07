@@ -47,6 +47,21 @@ function AppAdmin({ logout }) {
 			msg: "dgadajdgajhgdjsadhgsjdgjhadjhdgasjdgjsagdhasgdjhsadgas",
 			eventDate: "2/13/2020",
 		},
+		{
+			type: "Broadcast",
+			msg: "dgadajdgajhgdjsadhgsjdgjhadjhdgasjdgjsagdhasgdjhsadgas",
+			eventDate: "23/12/2020",
+		},
+		{
+			type: "Broadcast",
+			msg: "dgadajdgajhgdjsadhgsjdgjhadjhdgasjdgjsagdhasgdjhsadgas",
+			eventDate: "21/13/2020",
+		},
+		{
+			type: "Broadcast",
+			msg: "dgadajdgajhgdjsadhgsjdgjhadjhdgasjdgjsagdhasgdjhsadgas",
+			eventDate: "2/13/2020",
+		},
 	];
 
 	return (
