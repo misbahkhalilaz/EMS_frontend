@@ -48,17 +48,18 @@ const AdminSalary = (props) => {
 	useEffect(() => {
 		callAPI(cookies.session, {
 			query: `query{
-  readCurrentSalaries{
-    employee_id
-    timestamp
-    pay
-    penalty
-    total_salary
-  }
-}`,
-		})
-			.then((res) => props.gotCurrentSalaries(res.data.readCurrentSalaries))
-			.then(() => setData(props.salaries));
+				readCurrentSalaries{
+					employee_id
+					timestamp
+					pay
+					penalty
+					total_salary
+				}
+				}`,
+		}).then((res) => {
+			// setData(res);
+			props.gotCurrentSalaries(res.data.readCurrentSalaries);
+		});
 	}, []);
 
 	return (

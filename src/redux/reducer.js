@@ -8,6 +8,8 @@ import {
 	GOT_DAILY_ATD,
 	GOT_MONTHLY_ATD,
 	GOT_CURRENT_SALARIES,
+	GOT_BIO,
+	GOT_JOB,
 } from "./actionTypes";
 
 export default function reducer(state, action) {
@@ -42,6 +44,12 @@ export default function reducer(state, action) {
 
 		case GOT_CURRENT_SALARIES:
 			return Object.assign({}, state, { currentSalary: action.payload });
+
+		case GOT_BIO:
+			return Object.assign({}, state, { bio: action.payload });
+
+		case GOT_JOB:
+			return Object.assign({}, state, { job: action.payload });
 
 		default:
 			return state;

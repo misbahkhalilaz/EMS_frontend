@@ -7,3 +7,5 @@ export const GOT_PROJECTS = "gotProjects";
 export const GOT_DAILY_ATD = "gotDailyAtd";
 export const GOT_MONTHLY_ATD = "gotMonthlyAtd";
 export const GOT_CURRENT_SALARIES = "gotCurrentSalaries";
+export const GOT_BIO = "gotBio";
+export const GOT_JOB = "gotJob";

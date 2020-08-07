@@ -18,6 +18,8 @@ const initState = {
 	dailyAtd: [],
 	monthlyAtd: [],
 	currentSalary: [],
+	bio: {},
+	job: {},
 };
 
 const store = createStore(reducer, initState, applyMiddleware(logger));

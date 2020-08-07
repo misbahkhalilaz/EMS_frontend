@@ -8,6 +8,8 @@ import {
 	GOT_DAILY_ATD,
 	GOT_MONTHLY_ATD,
 	GOT_CURRENT_SALARIES,
+	GOT_BIO,
+	GOT_JOB,
 } from "./actionTypes";
 
 export const changeIsFetching = () => ({
@@ -52,4 +54,14 @@ export const gotMonthlyAtd = (atd) => ({
 export const gotCurrentSalaries = (salaries) => ({
 	type: GOT_CURRENT_SALARIES,
 	payload: salaries,
+});
+
+export const gotBio = (bio) => ({
+	type: GOT_BIO,
+	payload: bio,
+});
+
+export const gotJob = (job) => ({
+	type: GOT_JOB,
+	payload: job,
 });

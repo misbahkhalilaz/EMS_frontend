@@ -4,6 +4,7 @@ import { useCookies } from "react-cookie";
 import { connect } from "react-redux";
 import { gotError } from "../redux/actionCreators";
 import AppAdmin from "./admin";
+import Employee from "./employee";
 
 function App(props) {
 	const [cookies, setCookie, removeCookie] = useCookies(["session", "role"]);
@@ -11,10 +12,8 @@ function App(props) {
 	if (cookies.session)
 		if (cookies.role === "department")
 			return <AppAdmin logout={removeCookie} />;
-		else if (cookies.role === "employee")
-			return (
-				<h1 onClick={() => removeCookie("session")}>logged in employee</h1>
-			);
+		else if (cookies.role === "employee") return <Employee />;
+
 	return <LoginForm cookies={cookies} setCookie={setCookie} />;
 }
 
