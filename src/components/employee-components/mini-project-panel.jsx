@@ -23,6 +23,7 @@ const MiniProjectDetails = (props) => {
 						.filter((proj) => proj.completed === false)
 						.map((proj) => (
 							<Descriptions.Item
+								key={proj._id}
 								style={{ borderRadius: 20, padding: 0, background: "white" }}
 								label={<Title level={3}>{proj.title}</Title>}
 							>

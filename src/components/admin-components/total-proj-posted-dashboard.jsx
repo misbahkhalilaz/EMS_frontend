@@ -91,6 +91,7 @@ const ProjectPosted = (props) => {
 
 	useEffect(() => {
 		fetchProjects();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	let list = props.employees.map((emp) => (
@@ -310,5 +311,3 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 export default connect(mapStateToProps, { gotProjects })(ProjectPosted);
-
-function addNewProject() {}

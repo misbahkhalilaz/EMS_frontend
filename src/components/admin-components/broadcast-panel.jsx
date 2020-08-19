@@ -1,5 +1,4 @@
 import React from "react";
-import { useCookies } from "react-cookie";
 import { Badge, Typography } from "antd";
 import "antd/dist/antd.css";
 import "../employee-components/broadcast.css";
@@ -9,8 +8,6 @@ import { connect } from "react-redux";
 const { Title } = Typography;
 
 const BroadcastPanel = (props) => {
-	const [cookies] = useCookies("session");
-
 	return (
 		<>
 			<div className="broadcast-panel-header">

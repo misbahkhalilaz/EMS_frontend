@@ -35,6 +35,7 @@ function App(props) {
 		socket.on("rcv_broadcast", () => {
 			rcvBroadcasts();
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	if (cookies.session)

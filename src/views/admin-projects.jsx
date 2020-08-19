@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-	Row,
-	Col,
-	Typography,
-	Radio,
-	Menu,
-	Dropdown,
-	Space,
-	Button,
-	Table,
-} from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { Row, Col, Typography, Radio, Table } from "antd";
 import { connect } from "react-redux";
-
-import moment from "moment";
 
 const { Title } = Typography;
 
@@ -54,6 +41,7 @@ const AdminProject = (props) => {
 
 	useEffect(() => {
 		setProjects(data);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	const columns = [
 		{
