@@ -25,6 +25,11 @@ const { Option } = Select;
 const ProjectTable = (props) => {
   const [task, setAssign] = useState(false);
   const [membersData, setMembersData] = useState([""]);
+  const [deadline, setDeadline] = useState(
+    parseInt(new Date(Date.now()).getTime() / 1000 + 5 * 3600)
+  );
+  const [taskInput, setTask] = useState("");
+  const [member, setMember] = useState("");
   let data = props.projects.map((proj) => ({
     ...proj,
     deadline: new Date(proj.deadline * 1000).toLocaleDateString("en-US"),
