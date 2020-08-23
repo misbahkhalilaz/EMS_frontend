@@ -39,6 +39,15 @@ const ProjectTable = (props) => {
 		{
 			Member: "ABC",
 		},
+		{
+			Member: "ABC",
+		},
+		{
+			Member: "ABC",
+		},
+		{
+			Member: "ABC",
+		},
 	];
 
 	const columns = [

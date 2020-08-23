@@ -5,10 +5,9 @@ import { DownOutlined } from "@ant-design/icons";
 import "./month-table-css.css";
 
 const MonthSalaryTable = () => {
-	const now = new Date().getUTCFullYear();
-	const years = Array(now - (now - 20))
-		.fill("")
-		.map((idx) => now - idx);
+	let now = new Date().getUTCFullYear() + 1;
+	let years = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+	years = years.map((yr) => (now -= 1));
 
 	const monthColumn = [
 		{

@@ -12,6 +12,7 @@ const ProjectChart = (props) => {
 	const [cookies] = useCookies("session");
 
 	const data = {
+		title: "jkj",
 		datasets: [
 			{
 				label: "Total Projects",

@@ -4,7 +4,7 @@ import reducer from "./reducer";
 
 const logger = createLogger();
 
-const initState = {
+export const initState = {
 	isFetching: false,
 	error: null,
 	user: {

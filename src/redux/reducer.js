@@ -11,7 +11,10 @@ import {
 	GOT_BIO,
 	GOT_JOB,
 	GOT_BROADCASTS,
+	CLEAR_STORE,
 } from "./actionTypes";
+
+import { initState } from "./store";
 
 export default function reducer(state, action) {
 	switch (action.type) {
@@ -54,6 +57,9 @@ export default function reducer(state, action) {
 
 		case GOT_BROADCASTS:
 			return Object.assign({}, state, { broadcasts: action.payload.reverse() });
+
+		case CLEAR_STORE:
+			return initState;
 
 		default:
 			return state;
