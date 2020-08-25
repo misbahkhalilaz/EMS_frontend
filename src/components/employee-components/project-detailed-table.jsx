@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Row,
 	Col,
 	Typography,
-	Radio,
 	Menu,
-	Dropdown,
 	Space,
 	Button,
 	Table,
@@ -16,8 +14,7 @@ import {
 	DatePicker,
 	Tooltip,
 } from "antd";
-import { DownOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import moment from "moment";
+import { MinusCircleOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 
 const { Title } = Typography;
@@ -31,8 +28,16 @@ const ProjectTable = (props) => {
 	);
 	const [taskInput, setTask] = useState("");
 	const [member, setMember] = useState("");
+	const [selected, setSelected] = useState();
 
-	props.setMembers(props.employees.filter((emp) => emp._id === props.id));
+	useEffect(() => {
+		setSelected(props.projects[0]._id);
+		props.setMembers(
+			props.projects[0].other_members.map(
+				(mem) => props.employees.filter((emp) => emp._id === mem)[0]
+			)
+		);
+	}, []);
 
 	let data = props.projects.map((proj) => {
 		let name = props.employees.filter(
@@ -121,29 +126,6 @@ const ProjectTable = (props) => {
 		},
 	];
 
-	const now = new Date().getUTCFullYear();
-	const years = Array(now - (now - 20))
-		.fill("")
-		.map((idx) => now - idx);
-	const months = moment.months();
-	const currentMonth = moment(new Date()).month();
-
-	const yearMenu = (
-		<Menu>
-			{years.map((year) => (
-				<Menu.Item key={year}>{year}</Menu.Item>
-			))}
-		</Menu>
-	);
-
-	const monthMenu = (
-		<Menu>
-			{months.map((month) => (
-				<Menu.Item key={month}>{month}</Menu.Item>
-			))}
-		</Menu>
-	);
-
 	return (
 		<>
 			<Row style={{ textAlign: "center" }}>
@@ -163,6 +145,7 @@ const ProjectTable = (props) => {
 						scroll={{ y: 240 }}
 						onRow={(r) => ({
 							onClick: () => {
+								setSelected(r._id);
 								props.setMembers(
 									props.projects
 										.filter((proj) => proj._id === r._id)[0]
@@ -170,16 +153,12 @@ const ProjectTable = (props) => {
 											(mem) =>
 												props.employees.filter((emp) => emp._id === mem)[0]
 										)
-									// .map((mem) => ({
-									// 	member: (
-									// 		<Tooltip title={mem._id}>
-									// 			{mem.first_name + " " + mem.last_name}
-									// 		</Tooltip>
-									// 	),
-									// }))
 								);
 							},
-							style: { cursor: "pointer" },
+							style: {
+								cursor: "pointer",
+								backgroundColor: r._id === selected ? "#f2f2f0" : "",
+							},
 						})}
 					/>
 				</Col>

@@ -7,7 +7,7 @@ import "../components/employee-components/main-theme.css";
 
 const EmployeeProjectTab = () => {
 	const [members, setMembers] = useState([""]);
-	const [tasks, setTasks] = useState();
+	const [tasks, setTasks] = useState([""]);
 	return (
 		<>
 			<Row>

@@ -14,16 +14,18 @@ import {
 	Tooltip,
 } from "antd";
 
-const { Option } = Select;
 const { Title } = Typography;
 
 const TaskTable = (props) => {
 	const [editTask, setTask] = useState(false);
 	const [mem, setMem] = useState([{}]);
+	const [selectedMem, setSelectedMem] = useState();
 
 	useEffect(() => {
+		setSelectedMem(props.members[0]._id);
 		setMem(
 			props.members.map((mem) => ({
+				_id: mem._id,
 				member: (
 					<Tooltip title={mem._id + " " + mem.first_name + " " + mem.last_name}>
 						{mem.first_name}
@@ -127,7 +129,13 @@ const TaskTable = (props) => {
 						size="middle"
 						pagination={false}
 						scroll={{ y: 120 }}
-						onRow={(r) => ({ style: { cursor: "pointer" } })}
+						onRow={(r) => ({
+							onClick: () => setSelectedMem(r._id),
+							style: {
+								cursor: "pointer",
+								backgroundColor: r._id === selectedMem ? "#cacccf" : "",
+							},
+						})}
 					/>
 				</Col>
 				<Col span={19} push={1} className="col-display">
