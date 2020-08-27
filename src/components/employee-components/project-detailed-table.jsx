@@ -36,8 +36,16 @@ const ProjectTable = (props) => {
         (mem) => props.employees.filter((emp) => emp._id === mem)[0]
       )
     );
-    props.setTasks(props.projects[0].tasks);
-  }, []);
+    props.setTasks(
+      props.projects[0].tasks.map((task) => ({
+        ...task,
+        deadline: new Date(task.deadline * 1000).toLocaleDateString("en-US"),
+        assign_date: new Date(task.assign_date * 1000).toLocaleDateString(
+          "en-US"
+        ),
+      }))
+    );
+  }, [props.projects]);
 
   let data = props.projects.map((proj) => {
     let name = props.employees.filter(
@@ -155,7 +163,17 @@ const ProjectTable = (props) => {
                     )
                 );
                 props.setTasks(
-                  props.projects.filter((proj) => proj._id === r._id)[0].tasks
+                  props.projects
+                    .filter((proj) => proj._id === r._id)[0]
+                    .tasks.map((task) => ({
+                      ...task,
+                      deadline: new Date(
+                        task.deadline * 1000
+                      ).toLocaleDateString("en-US"),
+                      assign_date: new Date(
+                        task.assign_date * 1000
+                      ).toLocaleDateString("en-US"),
+                    }))
                 );
               },
               style: {
