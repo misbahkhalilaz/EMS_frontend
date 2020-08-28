@@ -16,6 +16,32 @@ import {
 import React from "react";
 import { Checkbox } from "antd";
 import { initState } from "./store";
+import callAPI from "./../components/callAPI";
+import { message } from "antd";
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(";");
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == " ") {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+const checkTaskComp = (id, timestamp, value) =>
+  callAPI(getCookie("session"), {
+    query: `
+  mutation{
+    markTaskComp(_id: "${id}", assign_date: ${timestamp}, value: ${value})
+}`,
+  }).then((res) => res.data.markTaskComp);
 
 export default function reducer(state, action) {
   switch (action.type) {
@@ -56,7 +82,22 @@ export default function reducer(state, action) {
                 parseInt(new Date(Date.now()).getTime() / 1000 + 5 * 3600)
               ? "Active"
               : "Delayed",
-            completed_check: <Checkbox checked={task.completed} />,
+            completed_check: (
+              <Checkbox
+                defaultChecked={task.completed}
+                onClick={(e) =>
+                  checkTaskComp(
+                    proj._id,
+                    task.assign_date,
+                    !task.completed
+                  ).then((res) =>
+                    res === 1
+                      ? message.success("Success")
+                      : message.warning("failed")
+                  )
+                }
+              />
+            ),
           })),
         })),
       });

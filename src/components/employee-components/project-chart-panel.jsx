@@ -7,6 +7,30 @@ import { useCookies } from "react-cookie";
 import { gotProjects } from "../../redux/actionCreators";
 
 const { Title } = Typography;
+export const getProjects = (session) =>
+  callAPI(session, {
+    query: `query{
+              readProjEmp{
+                _id			
+                title
+                posted_date
+                deadline
+                leading_member
+                other_members
+                completed
+                tasks{
+                  member_id
+                  task
+				  deadline
+				  assign_date
+                  completed
+                }
+                chat{
+                  msg
+                }
+              }
+            }`,
+  });
 
 const ProjectChart = (props) => {
   const [cookies] = useCookies("session");
@@ -40,29 +64,9 @@ const ProjectChart = (props) => {
   };
 
   useEffect(() => {
-    callAPI(cookies.session, {
-      query: `query{
-              readProjEmp{
-                _id			
-                title
-                posted_date
-                deadline
-                leading_member
-                other_members
-                completed
-                tasks{
-                  member_id
-                  task
-				  deadline
-				  assign_date
-                  completed
-                }
-                chat{
-                  msg
-                }
-              }
-            }`,
-    }).then((res) => props.gotProjects(res.data.readProjEmp));
+    getProjects(cookies.session).then((res) =>
+      props.gotProjects(res.data.readProjEmp)
+    );
   }, []);
 
   return (

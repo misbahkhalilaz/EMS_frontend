@@ -19,6 +19,8 @@ import { connect } from "react-redux";
 const { Title } = Typography;
 const { Option } = Select;
 
+const tasks = [];
+
 const ProjectTable = (props) => {
   const [task, setAssign] = useState(false);
   const [membersData, setMembersData] = useState([""]);
@@ -194,12 +196,19 @@ const ProjectTable = (props) => {
           style: { backgroundColor: "#1890ff", borderRadius: 20 },
         }}
         cancelButtonProps={{ style: { display: "none" } }}
-        onOk={assignTask}
-        onCancel={() => setAssign(false)}
+        onOk={() => {
+          setMember("");
+          setAssign(false);
+        }}
+        onCancel={() => {
+          setMember("");
+          setAssign(false);
+        }}
       >
         <Form name="dynamic_form_nest_item" autoComplete="off">
           <Form.List name="users">
             {(fields, { add, remove }) => {
+              console.log(fields);
               return (
                 <div>
                   {fields.map((field) => (
@@ -225,21 +234,35 @@ const ProjectTable = (props) => {
                       >
                         <Select
                           className="form-items"
-                          showSearch
                           style={{ width: 150 }}
                           placeholder="Select a member"
                           optionFilterProp="children"
-                          filterOption={(input, option) =>
-                            option.children
-                              .toLowerCase()
-                              .indexOf(input.toLowerCase()) >= 0
-                          }
+                          value={member}
+                          onChange={(e) => setMember(e)}
                         >
-                          {membersData.map((member) => (
-                            <Option value={member} key={member}>
-                              {member}
-                            </Option>
-                          ))}
+                          {props.projects
+                            .filter((proj) => proj._id === selected)[0]
+                            .other_members.map(
+                              (mem) =>
+                                props.employees.filter(
+                                  (emp) => emp._id === mem
+                                )[0]
+                            )
+                            .map((member) => (
+                              <Option value={member._id} key={member._id}>
+                                <Tooltip
+                                  title={
+                                    member._id +
+                                    " " +
+                                    member.first_name +
+                                    " " +
+                                    member.last_name
+                                  }
+                                >
+                                  {member.first_name}
+                                </Tooltip>
+                              </Option>
+                            ))}
                         </Select>
                       </Form.Item>
                       <Form.Item
