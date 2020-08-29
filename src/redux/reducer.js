@@ -18,6 +18,7 @@ import { Checkbox } from "antd";
 import { initState } from "./store";
 import callAPI from "./../components/callAPI";
 import { message } from "antd";
+import store from "./store";
 
 function getCookie(cname) {
   var name = cname + "=";
@@ -44,6 +45,7 @@ const checkTaskComp = (id, timestamp, value) =>
   }).then((res) => res.data.markTaskComp);
 
 export default function reducer(state, action) {
+  let _id = {};
   switch (action.type) {
     case CHANGE_IS_FETCHING:
       return Object.assign({}, state, { isFetching: true, error: null });
@@ -82,22 +84,23 @@ export default function reducer(state, action) {
                 parseInt(new Date(Date.now()).getTime() / 1000 + 5 * 3600)
               ? "Active"
               : "Delayed",
-            completed_check: (
-              <Checkbox
-                defaultChecked={task.completed}
-                onClick={(e) =>
-                  checkTaskComp(
-                    proj._id,
-                    task.assign_date,
-                    !task.completed
-                  ).then((res) =>
-                    res === 1
-                      ? message.success("Success")
-                      : message.warning("failed")
-                  )
-                }
-              />
-            ),
+            // completed_check: (
+            //   <Checkbox
+            //     // disabled={_id === task.member_id ? false : true}
+            //     defaultChecked={task.completed}
+            //     onClick={(e) =>
+            //       checkTaskComp(
+            //         proj._id,
+            //         task.assign_date,
+            //         !task.completed
+            //       ).then((res) =>
+            //         res === 1
+            //           ? message.success("Success")
+            //           : message.warning("failed")
+            //       )
+            //     }
+            //   />
+            // ),
           })),
         })),
       });
@@ -111,8 +114,10 @@ export default function reducer(state, action) {
     case GOT_CURRENT_SALARIES:
       return Object.assign({}, state, { currentSalary: action.payload });
 
-    case GOT_BIO:
+    case GOT_BIO: {
+      _id = action.payload._id;
       return Object.assign({}, state, { bio: action.payload });
+    }
 
     case GOT_JOB:
       return Object.assign({}, state, { job: action.payload });
