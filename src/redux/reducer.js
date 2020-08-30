@@ -84,23 +84,6 @@ export default function reducer(state, action) {
                 parseInt(new Date(Date.now()).getTime() / 1000 + 5 * 3600)
               ? "Active"
               : "Delayed",
-            // completed_check: (
-            //   <Checkbox
-            //     // disabled={_id === task.member_id ? false : true}
-            //     defaultChecked={task.completed}
-            //     onClick={(e) =>
-            //       checkTaskComp(
-            //         proj._id,
-            //         task.assign_date,
-            //         !task.completed
-            //       ).then((res) =>
-            //         res === 1
-            //           ? message.success("Success")
-            //           : message.warning("failed")
-            //       )
-            //     }
-            //   />
-            // ),
           })),
         })),
       });
@@ -123,7 +106,9 @@ export default function reducer(state, action) {
       return Object.assign({}, state, { job: action.payload });
 
     case GOT_BROADCASTS:
-      return Object.assign({}, state, { broadcasts: action.payload.reverse() });
+      return Object.assign({}, state, {
+        broadcasts: action.payload.reverse(),
+      });
 
     case CLEAR_STORE:
       return initState;
