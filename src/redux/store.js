@@ -20,7 +20,13 @@ export const initState = {
 	currentSalary: [{}],
 	bio: { first_name: "loading..", last_name: "please wait" },
 	job: {},
-	broadcasts: [{ msg: "loading..." }],
+	broadcasts: [
+		{
+			msg: "No broadcasts for this week..!",
+			date: new Date(Date.now()).getTime() / 1000,
+			eventDate: new Date(Date.now()).getTime() / 1000,
+		},
+	],
 	projChat: [],
 };
 

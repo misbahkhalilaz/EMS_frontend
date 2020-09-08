@@ -112,9 +112,11 @@ export default function reducer(state, action) {
 			return Object.assign({}, state, { job: action.payload });
 
 		case GOT_BROADCASTS:
-			return Object.assign({}, state, {
-				broadcasts: action.payload.reverse(),
-			});
+			if (action.payload.length > 0)
+				return Object.assign({}, state, {
+					broadcasts: action.payload.reverse(),
+				});
+			return state;
 
 		case ADD_PROJ_CHAT:
 			return Object.assign({}, state, {
