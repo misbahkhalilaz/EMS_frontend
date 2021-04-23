@@ -30,7 +30,7 @@ function LoginForm(props) {
 			redirect: "follow",
 		};
 		props.changeIsFetching(true);
-		fetch("http://localhost:4000/", requestOptions)
+		fetch("https://ems-backend-api.herokuapp.com/", requestOptions)
 			.then((response) => response.text())
 			.then((res) => JSON.parse(res))
 			.then((result) => {

@@ -7,7 +7,7 @@ import AppAdmin from "./admin";
 import Employee from "./employee";
 import io from "socket.io-client";
 import callAPI from "../components/callAPI";
-export const socket = io.connect("localhost:4000");
+export const socket = io.connect("https://ems-backend-api.herokuapp.com/");
 
 function App(props) {
 	const [cookies, setCookie, removeCookie] = useCookies(["session", "role"]);

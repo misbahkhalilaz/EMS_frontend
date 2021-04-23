@@ -14,8 +14,8 @@ export default function callAPI(cookie, obj) {
 		redirect: "follow",
 	};
 
-	return fetch("http://localhost:4000/", requestOptions)
-		.then((response) => response.text())
-		.then((result) => JSON.parse(result))
-		.catch((error) => console.log("error", error));
+	return fetch("https://ems-backend-api.herokuapp.com/", requestOptions)
+    .then((response) => response.text())
+    .then((result) => JSON.parse(result))
+    .catch((error) => console.log("error", error));
 }
